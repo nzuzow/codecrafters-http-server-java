@@ -37,12 +37,20 @@ public class Main {
 
       // determine proper response based on path
       String outLine = "";
-      if ("/".equals(path)) {
+      if (path != null && path.startsWith("/echo")) {
+        String extraPath = (path.startsWith("/echo/")) ? path.substring(6) : path.substring(5);
+        outLine = "HTTP/1.1 200 OK\r\n";
+        outLine += "Content-Type: text/plain\r\n";
+        outLine += "Content-Length: " + extraPath.length() + "\r\n\r\n";
+        outLine += extraPath + "\r\n";
+      } else if ("/".equals(path)) {
         outLine = "HTTP/1.1 200 OK\r\n\r\n";
       } else {
         outLine = "HTTP/1.1 404 Not Found\r\n\r\n";
       }
       writer.println(outLine);
+      writer.close();
+      brIn.close();
       clientSocket.close();
     } catch (IOException e) {
       System.out.println("IOException: " + e.getMessage());
