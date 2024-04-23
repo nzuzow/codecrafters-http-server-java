@@ -36,19 +36,31 @@ public class Main {
       PrintWriter writer = new PrintWriter(os, true);
 
       // determine proper response based on path
-      String outLine = "";
+      ResponseItem resp;
       if (path != null && path.startsWith("/echo")) {
         String extraPath = (path.startsWith("/echo/")) ? path.substring(6) : path.substring(5);
-        outLine = "HTTP/1.1 200 OK\r\n";
-        outLine += "Content-Type: text/plain\r\n";
-        outLine += "Content-Length: " + extraPath.length() + "\r\n\r\n";
-        outLine += extraPath + "\r\n";
+        resp = new ResponseItem(200);
+        resp.setContentType("text/plain");
+        resp.setContent(extraPath);
+      } else if (path != null && path.startsWith("/user-agent")) {
+        resp = new ResponseItem(200);
+        resp.setContentType("text/plain");
+        String line = brIn.readLine();
+        while (line != null) {
+          String[] parts = line.split(" ");
+          if ("User-Agent:".equals(parts[0])) {
+            resp.setContent(parts[1]);
+            line = null;
+          } else {
+            line = brIn.readLine();
+          }
+        }
       } else if ("/".equals(path)) {
-        outLine = "HTTP/1.1 200 OK\r\n\r\n";
+        resp = new ResponseItem(200);
       } else {
-        outLine = "HTTP/1.1 404 Not Found\r\n\r\n";
+        resp = new ResponseItem(404);
       }
-      writer.println(outLine);
+      writer.println(resp.asString());
       writer.close();
       brIn.close();
       clientSocket.close();
