@@ -1,5 +1,9 @@
+package builder;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import models.HttpResp;
 
 public class HttpRespBuilder {
     private String version;

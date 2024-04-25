@@ -1,3 +1,5 @@
+package models;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -5,16 +7,18 @@ public class HttpReq {
     private String method;
     private String path;
     private String version;
+    private String body;
     private Map<String, String> headers;
 
     public HttpReq(String method, String path) {
         this(method, path, "HTTP/1.1");
     }
-    
+
     public HttpReq(String method, String path, String version) {
         this.method = method;
         this.path = path;
         this.version = version;
+        this.body = "";
         this.headers = new HashMap<String, String>();        
     }
 
@@ -40,6 +44,14 @@ public class HttpReq {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getBody() {
+        return this.body;
     }
 
     public void addHeader(String key, String value) {
